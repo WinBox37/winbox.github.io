@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F1世界冠军计算器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #e10600 0%, #b30500 100%);
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 10px 20px rgba(225, 6, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            color: #e10600;
+            margin-bottom: 20px;
+            padding-left: 10px;
+            border-left: 5px solid #e10600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* 冠军结果显示 */
+        .champion-result {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #fff8e1 0%, #fff 100%);
+            border: 3px solid #ffd600;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .crown {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .champion-name {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .champion-points {
+            font-size: 1.5rem;
+            color: #666;
+        }
+        
+        .error-message {
+            background: #ffebee;
+            color: #d32f2f;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+            animation: shake 0.5s ease;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+        
+        /* 设置名次区域 */
+        .driver-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .driver-input {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            border-radius: 12px;
+            transition: background 0.3s;
+        }
+        
+        .driver-input:hover {
+            background: #f8f9fa;
+        }
+        
+        .driver-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        
+        .driver-code {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .driver-name {
+            font-size: 1rem;
+            color: #666;
+        }
+        
+        .nor { color: #ff9800; }
+        .ver { color: #1e88e5; }
+        .pia { color: #43a047; }
+        
+        .position-select {
+            width: 120px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            font-size: 1.1rem;
+            font-weight: 500;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .position-select:focus {
+            border-color: #e10600;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(225, 6, 0, 0.1);
+        }
+        
+        /* 计算公式区域 */
+        .calculation-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .calculation-item {
+            display: flex;
+            align-items: center;
+            padding: 18px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .formula-driver {
+            font-size: 1.3rem;
+            font-weight: bold;
+            width: 80px;
+        }
+        
+        .formula-text {
+            flex: 1;
+            font-size: 1.1rem;
+            color: #333;
+            text-align: center;
+        }
+        
+        .tie-hint {
+            text-align: center;
+            padding: 15px;
+            background: #fff3e0;
+            border-radius: 10px;
+            color: #ff9800;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        /* 当前积分区域 */
+        .scores-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .score-item {
+            text-align: center;
+            padding: 25px 15px;
+            border-radius: 12px;
+            transition: transform 0.3s;
+        }
+        
+        .score-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .score-item.nor {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 183, 77, 0.1));
+            border: 2px solid rgba(255, 152, 0, 0.2);
+        }
+        
+        .score-item.ver {
+            background: linear-gradient(135deg, rgba(30, 136, 229, 0.1), rgba(100, 181, 246, 0.1));
+            border: 2px solid rgba(30, 136, 229, 0.2);
+        }
+        
+        .score-item.pia {
+            background: linear-gradient(135deg, rgba(67, 160, 71, 0.1), rgba(102, 187, 106, 0.1));
+            border: 2px solid rgba(67, 160, 71, 0.2);
+        }
+        
+        .score-driver {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .score-value {
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        /* 积分规则区域 */
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+        
+        .rule-item {
+            text-align: center;
+            padding: 15px 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        .rule-item:hover {
+            transform: scale(1.05);
+            background: #e9ecef;
+        }
+        
+        .rule-position {
+            display: block;
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .rule-points {
+            display: block;
+            font-size: 1rem;
+            color: #e10600;
+            font-weight: bold;
+        }
+        
+        .rule-note {
+            text-align: center;
+            font-size: 1rem;
+            color: #999;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        /* 重置按钮 */
+        .reset-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .reset-btn:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .champion-name {
+                font-size: 1.8rem;
+            }
+            
+            .driver-input {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .position-select {
+                width: 100%;
+            }
+            
+            .scores-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .rules-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .rules-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            h1 {
+                font-size: 1.7rem;
+            }
+        }
+        
+        /* 占位符样式 */
+        .placeholder {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 1.2rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            display: none;
+        }
+        
+        .show {
+            display: block;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-flag-checkered"></i> F1世界冠军计算器</h1>
+            <p class="subtitle">输入车手名次，实时计算世界冠军归属</p>
+        </header>
+        
+        <!-- 1. 世界冠军结果 -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-trophy"></i> 世界冠军</h2>
+            
+            <!-- 错误提示 -->
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-triangle"></i> 名次不能相同！请重新选择
+            </div>
+            
+            <!-- 冠军显示 -->
+            <div class="champion-result" id="championResult">
+                <div class="crown">🏆</div>
+                <div class="champion-name" id="championName">请设置车手名次</div>
+                <div class="champion-points" id="championPoints">总积分：0分</div>
+            </div>
+        </div>
+        
+        <!-- 2. 设置名次 -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-edit"></i> 设置名次</h2>
+            <div class="driver-inputs">
+                <!-- NOR输入 -->
+                <div class="driver-input">
+                    <div class="driver-info">
+                        <div class="driver-code nor">NOR</div>
+                        <div class="driver-name">兰多·诺里斯</div>
+                    </div>
+                    <select class="position-select" id="norPosition">
+                        <option value="1">第1名</option>
+                        <option value="2">第2名</option>
+                        <option value="3" selected>第3名</option>
+                        <option value="4">第4名</option>
+                        <option value="5">第5名</option>
+                        <option value="6">第6名</option>
+                        <option value="7">第7名</option>
+                        <option value="8">第8名</option>
+                        <option value="9">第9名</option>
+                        <option value="10">第10名</option>
+                        <option value="11">第11名</option>
+                        <option value="12">第12名</option>
+                        <option value="13">第13名</option>
+                        <option value="14">第14名</option>
+                        <option value="15">第15名</option>
+                        <option value="16">第16名</option>
+                        <option value="17">第17名</option>
+                        <option value="18">第18名</option>
+                        <option value="19">第19名</option>
+                        <option value="20">第20名</option>
+                    </select>
+                </div>
+                
+                <!-- VER输入 -->
+                <div class="driver-input">
+                    <div class="driver-info">
+                        <div class="driver-code ver">VER</div>
+                        <div class="driver-name">马克斯·维斯塔潘</div>
+                    </div>
+                    <select class="position-select" id="verPosition">
+                        <option value="1">第1名</option>
+                        <option value="2" selected>第2名</option>
+                        <option value="3">第3名</option>
+                        <option value="4">第4名</option>
+                        <option value="5">第5名</option>
+                        <option value="6">第6名</option>
+                        <option value="7">第7名</option>
+                        <option value="8">第8名</option>
+                        <option value="9">第9名</option>
+                        <option value="10">第10名</option>
+                        <option value="11">第11名</option>
+                        <option value="12">第12名</option>
+                        <option value="13">第13名</option>
+                        <option value="14">第14名</option>
+                        <option value="15">第15名</option>
+                        <option value="16">第16名</option>
+                        <option value="17">第17名</option>
+                        <option value="18">第18名</option>
+                        <option value="19">第19名</option>
+                        <option value="20">第20名</option>
+                    </select>
+                </div>
+                
+                <!-- PIA输入 -->
+                <div class="driver-input">
+                    <div class="driver-info">
+                        <div class="driver-code pia">PIA</div>
+                        <div class="driver-name">奥斯卡·皮亚斯特里</div>
+                    </div>
+                    <select class="position-select" id="piaPosition">
+                        <option value="1">第1名</option>
+                        <option value="2">第2名</option>
+                        <option value="3" selected>第3名</option>
+                        <option value="4">第4名</option>
+                        <option value="5">第5名</option>
+                        <option value="6">第6名</option>
+                        <option value="7">第7名</option>
+                        <option value="8">第8名</option>
+                        <option value="9">第9名</option>
+                        <option value="10">第10名</option>
+                        <option value="11">第11名</option>
+                        <option value="12">第12名</option>
+                        <option value="13">第13名</option>
+                        <option value="14">第14名</option>
+                        <option value="15">第15名</option>
+                        <option value="16">第16名</option>
+                        <option value="17">第17名</option>
+                        <option value="18">第18名</option>
+                        <option value="19">第19名</option>
+                        <option value="20">第20名</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 3. 计算公式 -->
+        <div class="card" id="calculationCard">
+            <h2 class="card-title"><i class="fas fa-calculator"></i> 计算公式</h2>
+            <div class="calculation-items" id="calculationItems">
+                <div class="calculation-item" id="norCalculation">
+                    <div class="formula-driver nor">NOR</div>
+                    <div class="formula-text">408 + <span id="norRacePoints">0</span> = <span id="norTotal">408</span>分</div>
+                </div>
+                <div class="calculation-item" id="verCalculation">
+                    <div class="formula-driver ver">VER</div>
+                    <div class="formula-text">396 + <span id="verRacePoints">0</span> = <span id="verTotal">396</span>分</div>
+                </div>
+                <div class="calculation-item" id="piaCalculation">
+                    <div class="formula-driver pia">PIA</div>
+                    <div class="formula-text">392 + <span id="piaRacePoints">0</span> = <span id="piaTotal">392</span>分</div>
+                </div>
+            </div>
+            
+            <!-- 同分提示 -->
+            <div class="tie-hint" id="tieHint">
+                <i class="fas fa-exclamation-circle"></i> 出现同分！P1 获得冠军
+            </div>
+        </div>
+        
+        <!-- 4. 当前积分 -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-chart-bar"></i> 当前积分</h2>
+            <div class="scores-grid">
+                <div class="score-item nor">
+                    <div class="score-driver nor">NOR</div>
+                    <div class="score-value" id="norBase">408分</div>
+                </div>
+                <div class="score-item ver">
+                    <div class="score-driver ver">VER</div>
+                    <div class="score-value" id="verBase">396分</div>
+                </div>
+                <div class="score-item pia">
+                    <div class="score-driver pia">PIA</div>
+                    <div class="score-value" id="piaBase">392分</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 5. 其他 - 积分规则 -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-ruler"></i> 积分规则</h2>
+            <div class="rules-grid">
+                <div class="rule-item">
+                    <span class="rule-position">P1</span>
+                    <span class="rule-points">+25分</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-position">P2</span>
+                    <span class="rule-points">+18分</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-position">P3</span>
+                    <span class="rule-points">+15分</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-position">P4</span>
+                    <span class="rule-points">+12分</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-position">P5</span>
+                    <span class="rule-points">+10分</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-position">P6</span>
+                    <span class="rule-points">+8分</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-position">P7</span>
+                    <span class="rule-points">+6分</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-position">P8</span>
+                    <span class="rule-points">+4分</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-position">P9</span>
+                    <span class="rule-points">+2分</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-position">P10</span>
+                    <span class="rule-points">+1分</span>
+                </div>
+            </div>
+            <div class="rule-note">
+                P11-P20：0分
+            </div>
+        </div>
+        
+        <!-- 重置按钮 -->
+        <button class="reset-btn" id="resetBtn">
+            <i class="fas fa-redo"></i> 重置名次
+        </button>
+    </div>
+
+    <script>
+        // 基础积分
+        const baseScores = {
+            NOR: 408,
+            VER: 396,
+            PIA: 392
+        };
+        
+        // 根据名次获取积分
+        function getPointsByPosition(position) {
+            const pointsMap = {
+                1: 25,
+                2: 18,
+                3: 15,
+                4: 12,
+                5: 10,
+                6: 8,
+                7: 6,
+                8: 4,
+                9: 2,
+                10: 1
+            };
+            return pointsMap[position] || 0;
+        }
+        
+        // 获取DOM元素
+        const norPositionSelect = document.getElementById('norPosition');
+        const verPositionSelect = document.getElementById('verPosition');
+        const piaPositionSelect = document.getElementById('piaPosition');
+        const errorMessage = document.getElementById('errorMessage');
+        const championName = document.getElementById('championName');
+        const championPoints = document.getElementById('championPoints');
+        const championResult = document.getElementById('championResult');
+        const calculationCard = document.getElementById('calculationCard');
+        const calculationItems = document.getElementById('calculationItems');
+        const tieHint = document.getElementById('tieHint');
+        const resetBtn = document.getElementById('resetBtn');
+        
+        // 计算公式元素
+        const norRacePointsElem = document.getElementById('norRacePoints');
+        const verRacePointsElem = document.getElementById('verRacePoints');
+        const piaRacePointsElem = document.getElementById('piaRacePoints');
+        const norTotalElem = document.getElementById('norTotal');
+        const verTotalElem = document.getElementById('verTotal');
+        const piaTotalElem = document.getElementById('piaTotal');
+        
+        // 当前积分元素
+        const norBaseElem = document.getElementById('norBase');
+        const verBaseElem = document.getElementById('verBase');
+        const piaBaseElem = document.getElementById('piaBase');
+        
+        // 初始化显示当前积分
+        norBaseElem.textContent = baseScores.NOR + '分';
+        verBaseElem.textContent = baseScores.VER + '分';
+        piaBaseElem.textContent = baseScores.PIA + '分';
+        
+        // 检查名次是否重复并计算冠军
+        function checkAndCalculate() {
+            // 获取当前选择的名次
+            const norPos = parseInt(norPositionSelect.value);
+            const verPos = parseInt(verPositionSelect.value);
+            const piaPos = parseInt(piaPositionSelect.value);
+            
+            // 检查名次是否相同
+            const positions = [norPos, verPos, piaPos];
+            const hasDuplicate = positions.some((pos, index) => positions.indexOf(pos) !== index);
+            
+            if (hasDuplicate) {
+                // 名次相同，显示错误
+                errorMessage.classList.add('show');
+                errorMessage.classList.add('fade-in');
+                championName.textContent = '名次不能相同';
+                championPoints.textContent = '请重新选择名次';
+                calculationCard.classList.add('hide');
+                tieHint.classList.remove('show');
+                
+                // 清除计算公式
+                norRacePointsElem.textContent = '0';
+                verRacePointsElem.textContent = '0';
+                piaRacePointsElem.textContent = '0';
+                norTotalElem.textContent = baseScores.NOR;
+                verTotalElem.textContent = baseScores.VER;
+                piaTotalElem.textContent = baseScores.PIA;
+                
+                // 添加错误样式
+                championResult.style.background = 'linear-gradient(135deg, #ffebee 0%, #fff 100%)';
+                championResult.style.borderColor = '#d32f2f';
+            } else {
+                // 名次不同，计算冠军
+                errorMessage.classList.remove('show');
+                calculationCard.classList.remove('hide');
+                calculateChampion();
+                
+                // 恢复冠军样式
+                championResult.style.background = 'linear-gradient(135deg, #fff8e1 0%, #fff 100%)';
+                championResult.style.borderColor = '#ffd600';
+            }
+        }
+        
+        // 计算冠军
+        function calculateChampion() {
+            // 获取当前选择的名次
+            const norPos = parseInt(norPositionSelect.value);
+            const verPos = parseInt(verPositionSelect.value);
+            const piaPos = parseInt(piaPositionSelect.value);
+            
+            // 计算本场积分
+            const norRacePoints = getPointsByPosition(norPos);
+            const verRacePoints = getPointsByPosition(verPos);
+            const piaRacePoints = getPointsByPosition(piaPos);
+            
+            // 计算总积分
+            const norTotal = baseScores.NOR + norRacePoints;
+            const verTotal = baseScores.VER + verRacePoints;
+            const piaTotal = baseScores.PIA + piaRacePoints;
+            
+            // 更新计算公式显示
+            norRacePointsElem.textContent = norRacePoints;
+            verRacePointsElem.textContent = verRacePoints;
+            piaRacePointsElem.textContent = piaRacePoints;
+            norTotalElem.textContent = norTotal;
+            verTotalElem.textContent = verTotal;
+            piaTotalElem.textContent = piaTotal;
+            
+            // 确定冠军
+            determineChampion(norPos, verPos, piaPos, norTotal, verTotal, piaTotal);
+        }
+        
+        // 确定冠军（处理同分情况）
+        function determineChampion(norPos, verPos, piaPos, norTotal, verTotal, piaTotal) {
+            // 创建车手数组
+            const drivers = [
+                { 
+                    code: 'NOR', 
+                    name: '兰多·诺里斯',
+                    position: norPos,
+                    points: norTotal,
+                    basePoints: baseScores.NOR,
+                    racePoints: getPointsByPosition(norPos)
+                },
+                { 
+                    code: 'VER', 
+                    name: '马克斯·维斯塔潘',
+                    position: verPos,
+                    points: verTotal,
+                    basePoints: baseScores.VER,
+                    racePoints: getPointsByPosition(verPos)
+                },
+                { 
+                    code: 'PIA', 
+                    name: '奥斯卡·皮亚斯特里',
+                    position: piaPos,
+                    points: piaTotal,
+                    basePoints: baseScores.PIA,
+                    racePoints: getPointsByPosition(piaPos)
+                }
+            ];
+            
+            // 先按总积分排序
+            drivers.sort((a, b) => b.points - a.points);
+            
+            // 检查是否有同分
+            const topScore = drivers[0].points;
+            const isTie = drivers.filter(d => d.points === topScore).length > 1;
+            
+            let championDriver = '';
+            let championTotalPoints = topScore;
+            
+            if (isTie) {
+                // 如果有同分，按规则处理：当前P1为冠军
+                // 找出谁是P1
+                const p1Driver = drivers.find(d => d.position === 1);
+                if (p1Driver) {
+                    championDriver = `${p1Driver.code} ${p1Driver.name}`;
+                    championTotalPoints = p1Driver.points;
+                } else {
+                    // 如果没有P1（理论上不会出现这种情况），取第一个
+                    championDriver = `${drivers[0].code} ${drivers[0].name}`;
+                }
+                
+                // 显示同分提示
+                tieHint.classList.add('show');
+                tieHint.classList.add('fade-in');
+            } else {
+                // 没有同分，最高分者获胜
+                championDriver = `${drivers[0].code} ${drivers[0].name}`;
+                
+                // 隐藏同分提示
+                tieHint.classList.remove('show');
+            }
+            
+            // 更新冠军显示
+            championName.textContent = championDriver;
+            championPoints.textContent = `总积分：${championTotalPoints}分`;
+            championResult.classList.add('fade-in');
+            
+            // 移除动画类以便下次使用
+            setTimeout(() => {
+                championResult.classList.remove('fade-in');
+            }, 500);
+        }
+        
+        // 重置名次
+        function resetPositions() {
+            norPositionSelect.value = '3';  // P3
+            verPositionSelect.value = '2';  // P2
+            piaPositionSelect.value = '1';  // P1
+            
+            // 重新计算
+            checkAndCalculate();
+            
+            // 添加重置动画效果
+            const selects = document.querySelectorAll('.position-select');
+            selects.forEach(select => {
+                select.style.transform = 'scale(1.05)';
+                select.style.transition = 'transform 0.3s';
+                setTimeout(() => {
+                    select.style.transform = 'scale(1)';
+                }, 300);
+            });
+        }
+        
+        // 绑定事件监听器
+        norPositionSelect.addEventListener('change', checkAndCalculate);
+        verPositionSelect.addEventListener('change', checkAndCalculate);
+        piaPositionSelect.addEventListener('change', checkAndCalculate);
+        resetBtn.addEventListener('click', resetPositions);
+        
+        // 页面加载时执行一次计算
+        window.addEventListener('DOMContentLoaded', () => {
+            // 默认设置为NOR P3, VER P2, PIA P1
+            norPositionSelect.value = '3';
+            verPositionSelect.value = '2';
+            piaPositionSelect.value = '1';
+            
+            // 计算并显示结果
+            checkAndCalculate();
+        });
+        
+        // 添加一些交互效果
+        document.querySelectorAll('.position-select').forEach(select => {
+            select.addEventListener('focus', function() {
+                this.style.boxShadow = '0 0 0 3px rgba(225, 6, 0, 0.2)';
+            });
+            
+            select.addEventListener('blur', function() {
+                this.style.boxShadow = 'none';
+            });
+        });
+        
+        // 添加键盘快捷键
+        document.addEventListener('keydown', function(event) {
+            // Ctrl+R 或 Cmd+R 重置
+            if ((event.ctrlKey || event.metaKey) && event.key === 'r') {
+                event.preventDefault();
+                resetPositions();
+            }
+            
+            // ESC 键重置
+            if (event.key === 'Escape') {
+                resetPositions();
+            }
+        });
+    </script>
+</body>
+</html>
