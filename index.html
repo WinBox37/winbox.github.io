@@ -2,147 +2,151 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>F1世界冠军计算器</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>F1冠军计算器</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            background: #f0f2f5;
             color: #333;
-            line-height: 1.6;
-            padding: 20px;
-            min-height: 100vh;
+            line-height: 1.4;
+            font-size: 14px;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         .container {
-            max-width: 800px;
-            margin: 0 auto;
+            max-width: 100%;
+            padding: 12px;
         }
         
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 25px;
-            background: linear-gradient(135deg, #e10600 0%, #b30500 100%);
-            border-radius: 15px;
+        /* 标题区域 */
+        .header {
+            background: linear-gradient(135deg, #e10600 0%, #c00500 100%);
+            border-radius: 12px;
+            padding: 20px 15px;
+            margin-bottom: 15px;
             color: white;
-            box-shadow: 0 10px 20px rgba(225, 6, 0, 0.2);
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(225, 6, 0, 0.15);
         }
         
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-        }
-        
-        .subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-        }
-        
-        .card-title {
-            font-size: 1.4rem;
-            color: #e10600;
-            margin-bottom: 20px;
-            padding-left: 10px;
-            border-left: 5px solid #e10600;
-            display: flex;
-            align-items: center;
             gap: 10px;
         }
         
-        /* 冠军结果显示 */
+        .subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        /* 卡片通用样式 */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e10600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* 1. 世界冠军结果 */
         .champion-result {
             text-align: center;
-            padding: 30px;
+            padding: 20px 15px;
             background: linear-gradient(135deg, #fff8e1 0%, #fff 100%);
-            border: 3px solid #ffd600;
-            border-radius: 15px;
-            margin-bottom: 20px;
+            border: 2px solid #ffd600;
+            border-radius: 12px;
+            margin-bottom: 12px;
         }
         
         .crown {
-            font-size: 4rem;
-            margin-bottom: 15px;
+            font-size: 40px;
+            margin-bottom: 8px;
             animation: bounce 2s infinite;
         }
         
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-5px); }
         }
         
         .champion-name {
-            font-size: 2.2rem;
-            font-weight: bold;
+            font-size: 20px;
+            font-weight: 700;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
+            line-height: 1.3;
         }
         
         .champion-points {
-            font-size: 1.5rem;
+            font-size: 15px;
             color: #666;
         }
         
         .error-message {
             background: #ffebee;
             color: #d32f2f;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 12px;
+            border-radius: 8px;
             text-align: center;
-            margin-top: 15px;
+            margin-top: 12px;
+            font-size: 13px;
             display: none;
             animation: shake 0.5s ease;
         }
         
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
+            20%, 60% { transform: translateX(-3px); }
+            40%, 80% { transform: translateX(3px); }
         }
         
-        /* 设置名次区域 */
+        /* 2. 设置名次区域 */
         .driver-inputs {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 12px;
         }
         
         .driver-input {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 20px;
-            border-radius: 12px;
-            transition: background 0.3s;
+            padding: 14px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            transition: all 0.2s;
         }
         
-        .driver-input:hover {
-            background: #f8f9fa;
+        .driver-input:active {
+            background: #e9ecef;
+            transform: scale(0.99);
         }
         
         .driver-info {
@@ -152,13 +156,13 @@
         }
         
         .driver-code {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 2px;
         }
         
         .driver-name {
-            font-size: 1rem;
+            font-size: 12px;
             color: #666;
         }
         
@@ -167,147 +171,156 @@
         .pia { color: #43a047; }
         
         .position-select {
-            width: 120px;
-            padding: 12px 15px;
-            border-radius: 10px;
-            border: 2px solid #e0e0e0;
-            font-size: 1.1rem;
+            width: 90px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 14px;
             font-weight: 500;
             background: white;
+            color: #333;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px;
+            padding-right: 30px;
         }
         
         .position-select:focus {
             border-color: #e10600;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(225, 6, 0, 0.1);
+            box-shadow: 0 0 0 2px rgba(225, 6, 0, 0.1);
         }
         
-        /* 计算公式区域 */
+        /* 3. 计算公式区域 */
         .calculation-items {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
         }
         
         .calculation-item {
             display: flex;
             align-items: center;
-            padding: 18px;
+            padding: 14px;
             background: #f8f9fa;
-            border-radius: 10px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
         }
         
         .formula-driver {
-            font-size: 1.3rem;
-            font-weight: bold;
-            width: 80px;
+            font-size: 15px;
+            font-weight: 700;
+            width: 50px;
         }
         
         .formula-text {
             flex: 1;
-            font-size: 1.1rem;
+            font-size: 13px;
             color: #333;
             text-align: center;
         }
         
         .tie-hint {
             text-align: center;
-            padding: 15px;
+            padding: 12px;
             background: #fff3e0;
-            border-radius: 10px;
+            border-radius: 8px;
             color: #ff9800;
-            font-size: 1.1rem;
-            margin-top: 15px;
+            font-size: 13px;
+            margin-top: 12px;
             display: none;
         }
         
-        /* 当前积分区域 */
+        /* 4. 当前积分区域 */
         .scores-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            gap: 8px;
         }
         
         .score-item {
             text-align: center;
-            padding: 25px 15px;
-            border-radius: 12px;
-            transition: transform 0.3s;
+            padding: 15px 10px;
+            border-radius: 10px;
+            transition: transform 0.2s;
         }
         
-        .score-item:hover {
-            transform: scale(1.05);
+        .score-item:active {
+            transform: scale(0.95);
         }
         
         .score-item.nor {
-            background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 183, 77, 0.1));
-            border: 2px solid rgba(255, 152, 0, 0.2);
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.08), rgba(255, 183, 77, 0.08));
+            border: 1px solid rgba(255, 152, 0, 0.15);
         }
         
         .score-item.ver {
-            background: linear-gradient(135deg, rgba(30, 136, 229, 0.1), rgba(100, 181, 246, 0.1));
-            border: 2px solid rgba(30, 136, 229, 0.2);
+            background: linear-gradient(135deg, rgba(30, 136, 229, 0.08), rgba(100, 181, 246, 0.08));
+            border: 1px solid rgba(30, 136, 229, 0.15);
         }
         
         .score-item.pia {
-            background: linear-gradient(135deg, rgba(67, 160, 71, 0.1), rgba(102, 187, 106, 0.1));
-            border: 2px solid rgba(67, 160, 71, 0.2);
+            background: linear-gradient(135deg, rgba(67, 160, 71, 0.08), rgba(102, 187, 106, 0.08));
+            border: 1px solid rgba(67, 160, 71, 0.15);
         }
         
         .score-driver {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
         }
         
         .score-value {
-            font-size: 1.8rem;
-            font-weight: 500;
+            font-size: 18px;
+            font-weight: 600;
             color: #333;
         }
         
-        /* 积分规则区域 */
+        /* 5. 积分规则区域 */
         .rules-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
+            gap: 8px;
         }
         
         .rule-item {
             text-align: center;
-            padding: 15px 10px;
+            padding: 12px 6px;
             background: #f8f9fa;
-            border-radius: 10px;
-            transition: all 0.3s;
+            border-radius: 6px;
+            transition: all 0.2s;
         }
         
-        .rule-item:hover {
-            transform: scale(1.05);
-            background: #e9ecef;
+        .rule-item:active {
+            transform: scale(0.95);
         }
         
         .rule-position {
             display: block;
-            font-size: 1.1rem;
+            font-size: 12px;
             color: #666;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
         
         .rule-points {
             display: block;
-            font-size: 1rem;
+            font-size: 11px;
             color: #e10600;
-            font-weight: bold;
+            font-weight: 700;
         }
         
         .rule-note {
             text-align: center;
-            font-size: 1rem;
+            font-size: 12px;
             color: #999;
-            margin-top: 15px;
-            padding-top: 15px;
+            margin-top: 12px;
+            padding-top: 12px;
             border-top: 1px solid #f0f0f0;
         }
         
@@ -315,115 +328,152 @@
         .reset-btn {
             display: block;
             width: 100%;
-            padding: 18px;
+            padding: 16px;
             background: #f8f9fa;
             color: #666;
-            border: 2px solid #dee2e6;
-            border-radius: 12px;
-            font-size: 1.1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 15px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
+            transition: all 0.2s;
+            margin-top: 8px;
+            margin-bottom: 20px;
         }
         
-        .reset-btn:hover {
+        .reset-btn:active {
             background: #e9ecef;
-            transform: translateY(-2px);
+            transform: translateY(1px);
         }
         
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .card {
-                padding: 20px;
-            }
-            
-            .champion-name {
-                font-size: 1.8rem;
-            }
-            
-            .driver-input {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            
-            .position-select {
-                width: 100%;
-            }
-            
-            .scores-grid {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-            
-            .rules-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .rules-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            h1 {
-                font-size: 1.7rem;
-            }
-        }
-        
-        /* 占位符样式 */
-        .placeholder {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-            font-size: 1.2rem;
-            background: #f8f9fa;
-            border-radius: 12px;
-            display: none;
-        }
-        
+        /* 隐藏/显示类 */
         .show {
-            display: block;
+            display: block !important;
         }
         
         .hide {
-            display: none;
+            display: none !important;
         }
         
         /* 动画效果 */
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .fade-in {
-            animation: fadeIn 0.5s ease;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        /* 针对小屏幕的额外调整 */
+        @media (max-width: 360px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 14px;
+            }
+            
+            .champion-name {
+                font-size: 18px;
+            }
+            
+            .driver-input {
+                padding: 12px;
+            }
+            
+            .position-select {
+                width: 80px;
+                font-size: 13px;
+                padding: 8px 10px;
+                padding-right: 28px;
+            }
+            
+            .rules-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+            }
+        }
+        
+        /* 针对平板和稍大屏幕的调整 */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+            
+            body {
+                padding: 20px 0;
+                background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+                min-height: 100vh;
+            }
+        }
+        
+        /* 防止iOS点击高亮 */
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* 优化长按选择 */
+        .driver-input, .score-item, .rule-item, .reset-btn {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        /* 滚动条优化 */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 2px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 2px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        /* 加载优化 */
+        .loading {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .loaded {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-flag-checkered"></i> F1世界冠军计算器</h1>
-            <p class="subtitle">输入车手名次，实时计算世界冠军归属</p>
-        </header>
+    <div class="container loading">
+        <!-- 标题区域 -->
+        <div class="header">
+            <div class="title">
+                <i class="fas fa-flag-checkered"></i>
+                F1冠军计算器
+            </div>
+            <div class="subtitle">输入名次，实时计算世界冠军</div>
+        </div>
         
         <!-- 1. 世界冠军结果 -->
         <div class="card">
-            <h2 class="card-title"><i class="fas fa-trophy"></i> 世界冠军</h2>
+            <div class="section-title">
+                <i class="fas fa-trophy"></i>
+                世界冠军
+            </div>
             
             <!-- 错误提示 -->
             <div class="error-message" id="errorMessage">
-                <i class="fas fa-exclamation-triangle"></i> 名次不能相同！请重新选择
+                <i class="fas fa-exclamation-triangle"></i>
+                名次不能相同！请重新选择
             </div>
             
             <!-- 冠军显示 -->
@@ -436,7 +486,10 @@
         
         <!-- 2. 设置名次 -->
         <div class="card">
-            <h2 class="card-title"><i class="fas fa-edit"></i> 设置名次</h2>
+            <div class="section-title">
+                <i class="fas fa-edit"></i>
+                设置名次
+            </div>
             <div class="driver-inputs">
                 <!-- NOR输入 -->
                 <div class="driver-input">
@@ -532,7 +585,10 @@
         
         <!-- 3. 计算公式 -->
         <div class="card" id="calculationCard">
-            <h2 class="card-title"><i class="fas fa-calculator"></i> 计算公式</h2>
+            <div class="section-title">
+                <i class="fas fa-calculator"></i>
+                计算公式
+            </div>
             <div class="calculation-items" id="calculationItems">
                 <div class="calculation-item" id="norCalculation">
                     <div class="formula-driver nor">NOR</div>
@@ -550,13 +606,17 @@
             
             <!-- 同分提示 -->
             <div class="tie-hint" id="tieHint">
-                <i class="fas fa-exclamation-circle"></i> 出现同分！P1 获得冠军
+                <i class="fas fa-exclamation-circle"></i>
+                出现同分！P1 获得冠军
             </div>
         </div>
         
         <!-- 4. 当前积分 -->
         <div class="card">
-            <h2 class="card-title"><i class="fas fa-chart-bar"></i> 当前积分</h2>
+            <div class="section-title">
+                <i class="fas fa-chart-bar"></i>
+                当前积分
+            </div>
             <div class="scores-grid">
                 <div class="score-item nor">
                     <div class="score-driver nor">NOR</div>
@@ -573,9 +633,12 @@
             </div>
         </div>
         
-        <!-- 5. 其他 - 积分规则 -->
+        <!-- 5. 积分规则 -->
         <div class="card">
-            <h2 class="card-title"><i class="fas fa-ruler"></i> 积分规则</h2>
+            <div class="section-title">
+                <i class="fas fa-ruler"></i>
+                积分规则
+            </div>
             <div class="rules-grid">
                 <div class="rule-item">
                     <span class="rule-position">P1</span>
@@ -625,240 +688,251 @@
         
         <!-- 重置按钮 -->
         <button class="reset-btn" id="resetBtn">
-            <i class="fas fa-redo"></i> 重置名次
+            <i class="fas fa-redo"></i>
+            重置名次
         </button>
     </div>
 
     <script>
-        // 基础积分
-        const baseScores = {
-            NOR: 408,
-            VER: 396,
-            PIA: 392
-        };
-        
-        // 根据名次获取积分
-        function getPointsByPosition(position) {
-            const pointsMap = {
-                1: 25,
-                2: 18,
-                3: 15,
-                4: 12,
-                5: 10,
-                6: 8,
-                7: 6,
-                8: 4,
-                9: 2,
-                10: 1
+        // 等待DOM加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 基础积分
+            const baseScores = {
+                NOR: 408,
+                VER: 396,
+                PIA: 392
             };
-            return pointsMap[position] || 0;
-        }
-        
-        // 获取DOM元素
-        const norPositionSelect = document.getElementById('norPosition');
-        const verPositionSelect = document.getElementById('verPosition');
-        const piaPositionSelect = document.getElementById('piaPosition');
-        const errorMessage = document.getElementById('errorMessage');
-        const championName = document.getElementById('championName');
-        const championPoints = document.getElementById('championPoints');
-        const championResult = document.getElementById('championResult');
-        const calculationCard = document.getElementById('calculationCard');
-        const calculationItems = document.getElementById('calculationItems');
-        const tieHint = document.getElementById('tieHint');
-        const resetBtn = document.getElementById('resetBtn');
-        
-        // 计算公式元素
-        const norRacePointsElem = document.getElementById('norRacePoints');
-        const verRacePointsElem = document.getElementById('verRacePoints');
-        const piaRacePointsElem = document.getElementById('piaRacePoints');
-        const norTotalElem = document.getElementById('norTotal');
-        const verTotalElem = document.getElementById('verTotal');
-        const piaTotalElem = document.getElementById('piaTotal');
-        
-        // 当前积分元素
-        const norBaseElem = document.getElementById('norBase');
-        const verBaseElem = document.getElementById('verBase');
-        const piaBaseElem = document.getElementById('piaBase');
-        
-        // 初始化显示当前积分
-        norBaseElem.textContent = baseScores.NOR + '分';
-        verBaseElem.textContent = baseScores.VER + '分';
-        piaBaseElem.textContent = baseScores.PIA + '分';
-        
-        // 检查名次是否重复并计算冠军
-        function checkAndCalculate() {
-            // 获取当前选择的名次
-            const norPos = parseInt(norPositionSelect.value);
-            const verPos = parseInt(verPositionSelect.value);
-            const piaPos = parseInt(piaPositionSelect.value);
             
-            // 检查名次是否相同
-            const positions = [norPos, verPos, piaPos];
-            const hasDuplicate = positions.some((pos, index) => positions.indexOf(pos) !== index);
-            
-            if (hasDuplicate) {
-                // 名次相同，显示错误
-                errorMessage.classList.add('show');
-                errorMessage.classList.add('fade-in');
-                championName.textContent = '名次不能相同';
-                championPoints.textContent = '请重新选择名次';
-                calculationCard.classList.add('hide');
-                tieHint.classList.remove('show');
-                
-                // 清除计算公式
-                norRacePointsElem.textContent = '0';
-                verRacePointsElem.textContent = '0';
-                piaRacePointsElem.textContent = '0';
-                norTotalElem.textContent = baseScores.NOR;
-                verTotalElem.textContent = baseScores.VER;
-                piaTotalElem.textContent = baseScores.PIA;
-                
-                // 添加错误样式
-                championResult.style.background = 'linear-gradient(135deg, #ffebee 0%, #fff 100%)';
-                championResult.style.borderColor = '#d32f2f';
-            } else {
-                // 名次不同，计算冠军
-                errorMessage.classList.remove('show');
-                calculationCard.classList.remove('hide');
-                calculateChampion();
-                
-                // 恢复冠军样式
-                championResult.style.background = 'linear-gradient(135deg, #fff8e1 0%, #fff 100%)';
-                championResult.style.borderColor = '#ffd600';
+            // 根据名次获取积分
+            function getPointsByPosition(position) {
+                const pointsMap = {
+                    1: 25,
+                    2: 18,
+                    3: 15,
+                    4: 12,
+                    5: 10,
+                    6: 8,
+                    7: 6,
+                    8: 4,
+                    9: 2,
+                    10: 1
+                };
+                return pointsMap[position] || 0;
             }
-        }
-        
-        // 计算冠军
-        function calculateChampion() {
-            // 获取当前选择的名次
-            const norPos = parseInt(norPositionSelect.value);
-            const verPos = parseInt(verPositionSelect.value);
-            const piaPos = parseInt(piaPositionSelect.value);
             
-            // 计算本场积分
-            const norRacePoints = getPointsByPosition(norPos);
-            const verRacePoints = getPointsByPosition(verPos);
-            const piaRacePoints = getPointsByPosition(piaPos);
+            // 获取DOM元素
+            const norPositionSelect = document.getElementById('norPosition');
+            const verPositionSelect = document.getElementById('verPosition');
+            const piaPositionSelect = document.getElementById('piaPosition');
+            const errorMessage = document.getElementById('errorMessage');
+            const championName = document.getElementById('championName');
+            const championPoints = document.getElementById('championPoints');
+            const championResult = document.getElementById('championResult');
+            const calculationCard = document.getElementById('calculationCard');
+            const tieHint = document.getElementById('tieHint');
+            const resetBtn = document.getElementById('resetBtn');
             
-            // 计算总积分
-            const norTotal = baseScores.NOR + norRacePoints;
-            const verTotal = baseScores.VER + verRacePoints;
-            const piaTotal = baseScores.PIA + piaRacePoints;
+            // 计算公式元素
+            const norRacePointsElem = document.getElementById('norRacePoints');
+            const verRacePointsElem = document.getElementById('verRacePoints');
+            const piaRacePointsElem = document.getElementById('piaRacePoints');
+            const norTotalElem = document.getElementById('norTotal');
+            const verTotalElem = document.getElementById('verTotal');
+            const piaTotalElem = document.getElementById('piaTotal');
             
-            // 更新计算公式显示
-            norRacePointsElem.textContent = norRacePoints;
-            verRacePointsElem.textContent = verRacePoints;
-            piaRacePointsElem.textContent = piaRacePoints;
-            norTotalElem.textContent = norTotal;
-            verTotalElem.textContent = verTotal;
-            piaTotalElem.textContent = piaTotal;
+            // 当前积分元素
+            const norBaseElem = document.getElementById('norBase');
+            const verBaseElem = document.getElementById('verBase');
+            const piaBaseElem = document.getElementById('piaBase');
             
-            // 确定冠军
-            determineChampion(norPos, verPos, piaPos, norTotal, verTotal, piaTotal);
-        }
-        
-        // 确定冠军（处理同分情况）
-        function determineChampion(norPos, verPos, piaPos, norTotal, verTotal, piaTotal) {
-            // 创建车手数组
-            const drivers = [
-                { 
-                    code: 'NOR', 
-                    name: '兰多·诺里斯',
-                    position: norPos,
-                    points: norTotal,
-                    basePoints: baseScores.NOR,
-                    racePoints: getPointsByPosition(norPos)
-                },
-                { 
-                    code: 'VER', 
-                    name: '马克斯·维斯塔潘',
-                    position: verPos,
-                    points: verTotal,
-                    basePoints: baseScores.VER,
-                    racePoints: getPointsByPosition(verPos)
-                },
-                { 
-                    code: 'PIA', 
-                    name: '奥斯卡·皮亚斯特里',
-                    position: piaPos,
-                    points: piaTotal,
-                    basePoints: baseScores.PIA,
-                    racePoints: getPointsByPosition(piaPos)
-                }
-            ];
+            // 初始化显示当前积分
+            norBaseElem.textContent = baseScores.NOR + '分';
+            verBaseElem.textContent = baseScores.VER + '分';
+            piaBaseElem.textContent = baseScores.PIA + '分';
             
-            // 先按总积分排序
-            drivers.sort((a, b) => b.points - a.points);
-            
-            // 检查是否有同分
-            const topScore = drivers[0].points;
-            const isTie = drivers.filter(d => d.points === topScore).length > 1;
-            
-            let championDriver = '';
-            let championTotalPoints = topScore;
-            
-            if (isTie) {
-                // 如果有同分，按规则处理：当前P1为冠军
-                // 找出谁是P1
-                const p1Driver = drivers.find(d => d.position === 1);
-                if (p1Driver) {
-                    championDriver = `${p1Driver.code} ${p1Driver.name}`;
-                    championTotalPoints = p1Driver.points;
+            // 检查名次是否重复并计算冠军
+            function checkAndCalculate() {
+                // 获取当前选择的名次
+                const norPos = parseInt(norPositionSelect.value);
+                const verPos = parseInt(verPositionSelect.value);
+                const piaPos = parseInt(piaPositionSelect.value);
+                
+                // 检查名次是否相同
+                const positions = [norPos, verPos, piaPos];
+                const hasDuplicate = positions.some((pos, index) => positions.indexOf(pos) !== index);
+                
+                if (hasDuplicate) {
+                    // 名次相同，显示错误
+                    errorMessage.classList.add('show');
+                    errorMessage.classList.add('fade-in');
+                    championName.textContent = '名次不能相同';
+                    championPoints.textContent = '请重新选择名次';
+                    calculationCard.classList.add('hide');
+                    tieHint.classList.remove('show');
+                    
+                    // 清除计算公式
+                    norRacePointsElem.textContent = '0';
+                    verRacePointsElem.textContent = '0';
+                    piaRacePointsElem.textContent = '0';
+                    norTotalElem.textContent = baseScores.NOR;
+                    verTotalElem.textContent = baseScores.VER;
+                    piaTotalElem.textContent = baseScores.PIA;
+                    
+                    // 添加错误样式
+                    championResult.style.background = 'linear-gradient(135deg, #ffebee 0%, #fff 100%)';
+                    championResult.style.borderColor = '#d32f2f';
                 } else {
-                    // 如果没有P1（理论上不会出现这种情况），取第一个
-                    championDriver = `${drivers[0].code} ${drivers[0].name}`;
+                    // 名次不同，计算冠军
+                    errorMessage.classList.remove('show');
+                    calculationCard.classList.remove('hide');
+                    calculateChampion();
+                    
+                    // 恢复冠军样式
+                    championResult.style.background = 'linear-gradient(135deg, #fff8e1 0%, #fff 100%)';
+                    championResult.style.borderColor = '#ffd600';
                 }
-                
-                // 显示同分提示
-                tieHint.classList.add('show');
-                tieHint.classList.add('fade-in');
-            } else {
-                // 没有同分，最高分者获胜
-                championDriver = `${drivers[0].code} ${drivers[0].name}`;
-                
-                // 隐藏同分提示
-                tieHint.classList.remove('show');
             }
             
-            // 更新冠军显示
-            championName.textContent = championDriver;
-            championPoints.textContent = `总积分：${championTotalPoints}分`;
-            championResult.classList.add('fade-in');
+            // 计算冠军
+            function calculateChampion() {
+                // 获取当前选择的名次
+                const norPos = parseInt(norPositionSelect.value);
+                const verPos = parseInt(verPositionSelect.value);
+                const piaPos = parseInt(piaPositionSelect.value);
+                
+                // 计算本场积分
+                const norRacePoints = getPointsByPosition(norPos);
+                const verRacePoints = getPointsByPosition(verPos);
+                const piaRacePoints = getPointsByPosition(piaPos);
+                
+                // 计算总积分
+                const norTotal = baseScores.NOR + norRacePoints;
+                const verTotal = baseScores.VER + verRacePoints;
+                const piaTotal = baseScores.PIA + piaRacePoints;
+                
+                // 更新计算公式显示
+                norRacePointsElem.textContent = norRacePoints;
+                verRacePointsElem.textContent = verRacePoints;
+                piaRacePointsElem.textContent = piaRacePoints;
+                norTotalElem.textContent = norTotal;
+                verTotalElem.textContent = verTotal;
+                piaTotalElem.textContent = piaTotal;
+                
+                // 确定冠军
+                determineChampion(norPos, verPos, piaPos, norTotal, verTotal, piaTotal);
+            }
             
-            // 移除动画类以便下次使用
-            setTimeout(() => {
-                championResult.classList.remove('fade-in');
-            }, 500);
-        }
-        
-        // 重置名次
-        function resetPositions() {
-            norPositionSelect.value = '3';  // P3
-            verPositionSelect.value = '2';  // P2
-            piaPositionSelect.value = '1';  // P1
-            
-            // 重新计算
-            checkAndCalculate();
-            
-            // 添加重置动画效果
-            const selects = document.querySelectorAll('.position-select');
-            selects.forEach(select => {
-                select.style.transform = 'scale(1.05)';
-                select.style.transition = 'transform 0.3s';
+            // 确定冠军（处理同分情况）
+            function determineChampion(norPos, verPos, piaPos, norTotal, verTotal, piaTotal) {
+                // 创建车手数组
+                const drivers = [
+                    { 
+                        code: 'NOR', 
+                        name: '兰多·诺里斯',
+                        position: norPos,
+                        points: norTotal,
+                        basePoints: baseScores.NOR,
+                        racePoints: getPointsByPosition(norPos)
+                    },
+                    { 
+                        code: 'VER', 
+                        name: '马克斯·维斯塔潘',
+                        position: verPos,
+                        points: verTotal,
+                        basePoints: baseScores.VER,
+                        racePoints: getPointsByPosition(verPos)
+                    },
+                    { 
+                        code: 'PIA', 
+                        name: '奥斯卡·皮亚斯特里',
+                        position: piaPos,
+                        points: piaTotal,
+                        basePoints: baseScores.PIA,
+                        racePoints: getPointsByPosition(piaPos)
+                    }
+                ];
+                
+                // 先按总积分排序
+                drivers.sort((a, b) => b.points - a.points);
+                
+                // 检查是否有同分
+                const topScore = drivers[0].points;
+                const isTie = drivers.filter(d => d.points === topScore).length > 1;
+                
+                let championDriver = '';
+                let championTotalPoints = topScore;
+                
+                if (isTie) {
+                    // 如果有同分，按规则处理：当前P1为冠军
+                    // 找出谁是P1
+                    const p1Driver = drivers.find(d => d.position === 1);
+                    if (p1Driver) {
+                        championDriver = `${p1Driver.code} ${p1Driver.name}`;
+                        championTotalPoints = p1Driver.points;
+                    } else {
+                        // 如果没有P1（理论上不会出现这种情况），取第一个
+                        championDriver = `${drivers[0].code} ${drivers[0].name}`;
+                    }
+                    
+                    // 显示同分提示
+                    tieHint.classList.add('show');
+                    tieHint.classList.add('fade-in');
+                } else {
+                    // 没有同分，最高分者获胜
+                    championDriver = `${drivers[0].code} ${drivers[0].name}`;
+                    
+                    // 隐藏同分提示
+                    tieHint.classList.remove('show');
+                }
+                
+                // 更新冠军显示
+                championName.textContent = championDriver;
+                championPoints.textContent = `总积分：${championTotalPoints}分`;
+                championResult.classList.add('fade-in');
+                
+                // 移除动画类以便下次使用
                 setTimeout(() => {
-                    select.style.transform = 'scale(1)';
-                }, 300);
+                    championResult.classList.remove('fade-in');
+                }, 500);
+            }
+            
+            // 重置名次
+            function resetPositions() {
+                norPositionSelect.value = '3';  // P3
+                verPositionSelect.value = '2';  // P2
+                piaPositionSelect.value = '1';  // P1
+                
+                // 重新计算
+                checkAndCalculate();
+                
+                // 添加重置动画效果
+                const selects = document.querySelectorAll('.position-select');
+                selects.forEach(select => {
+                    select.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        select.style.transform = 'scale(1)';
+                    }, 200);
+                });
+            }
+            
+            // 绑定事件监听器
+            norPositionSelect.addEventListener('change', checkAndCalculate);
+            verPositionSelect.addEventListener('change', checkAndCalculate);
+            piaPositionSelect.addEventListener('change', checkAndCalculate);
+            resetBtn.addEventListener('click', resetPositions);
+            
+            // 添加触控反馈
+            document.querySelectorAll('.driver-input, .score-item, .rule-item, .reset-btn').forEach(el => {
+                el.addEventListener('touchstart', function() {
+                    this.style.opacity = '0.8';
+                });
+                
+                el.addEventListener('touchend', function() {
+                    this.style.opacity = '1';
+                });
             });
-        }
-        
-        // 绑定事件监听器
-        norPositionSelect.addEventListener('change', checkAndCalculate);
-        verPositionSelect.addEventListener('change', checkAndCalculate);
-        piaPositionSelect.addEventListener('change', checkAndCalculate);
-        resetBtn.addEventListener('click', resetPositions);
-        
-        // 页面加载时执行一次计算
-        window.addEventListener('DOMContentLoaded', () => {
+            
+            // 页面加载时执行一次计算
             // 默认设置为NOR P3, VER P2, PIA P1
             norPositionSelect.value = '3';
             verPositionSelect.value = '2';
@@ -866,31 +940,12 @@
             
             // 计算并显示结果
             checkAndCalculate();
-        });
-        
-        // 添加一些交互效果
-        document.querySelectorAll('.position-select').forEach(select => {
-            select.addEventListener('focus', function() {
-                this.style.boxShadow = '0 0 0 3px rgba(225, 6, 0, 0.2)';
-            });
             
-            select.addEventListener('blur', function() {
-                this.style.boxShadow = 'none';
-            });
-        });
-        
-        // 添加键盘快捷键
-        document.addEventListener('keydown', function(event) {
-            // Ctrl+R 或 Cmd+R 重置
-            if ((event.ctrlKey || event.metaKey) && event.key === 'r') {
-                event.preventDefault();
-                resetPositions();
-            }
-            
-            // ESC 键重置
-            if (event.key === 'Escape') {
-                resetPositions();
-            }
+            // 页面加载完成后显示内容
+            setTimeout(() => {
+                document.querySelector('.container').classList.remove('loading');
+                document.querySelector('.container').classList.add('loaded');
+            }, 50);
         });
     </script>
 </body>
